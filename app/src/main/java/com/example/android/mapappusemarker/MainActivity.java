@@ -1,5 +1,6 @@
 package com.example.android.mapappusemarker;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -7,7 +8,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -15,9 +18,9 @@ import java.util.Map;
 
 import static android.R.attr.fragment;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap map;
-     static final LatLng home = new LatLng(35.107291, 128.970803);
+    static final LatLng home = new LatLng(35.107291, 128.970803);
 
     //map ready instance
     private boolean onMapReady = false;
@@ -29,14 +32,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MarkerOptions dangridong;
     private MarkerOptions haundae;
     private MarkerOptions gujedo;
+    private MarkerOptions homeSweetHome;
 
     //CameraPosition클래스의 Seatle 상수로 선언하기
     static final CameraPosition HOME = CameraPosition.builder()
             .target(home)
             .zoom(10)
-            .bearing(90)
+            .bearing(0)
             .tilt(30)
             .build();
+
+    //add Circle instance
+    private CircleOptions circleInBusan;
 
 
     @Override
@@ -44,31 +51,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        homeSweetHome = new MarkerOptions()
+                .position(new LatLng(35.107291, 128.970803))
+                .title("Home!");
+
         busan = new MarkerOptions()
-                .position(new LatLng(35.1643694,128.9317158))
+                .position(new LatLng(35.1643694, 128.9317158))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_fitness_center_black_24dp))
                 .title("Busan");
 
         seoul = new MarkerOptions()
-                .position(new LatLng(37.5650172,126.8494661))
+                .position(new LatLng(37.5650172, 126.8494661))
                 .title("Seoul");
 
         jeju = new MarkerOptions()
-                .position(new LatLng(33.5038451,126.4949805))
+                .position(new LatLng(33.5038451, 126.4949805))
                 .title("Jeju");
 
         dangridong = new MarkerOptions()
-                .position(new LatLng(35.1107504,128.9664644))
+                .position(new LatLng(35.1107504, 128.9664644))
                 .title("Dangridong");
 
         haundae = new MarkerOptions()
-                .position(new LatLng(35.1769655,129.1035594))
+                .position(new LatLng(35.1769655, 129.1035594))
                 .title("Haundae");
 
         gujedo = new MarkerOptions()
-                .position(new LatLng(34.8869142,128.6216973))
+                .position(new LatLng(34.8869142, 128.6216973))
                 .title("Gujedo");
-
-
 
 
         MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -79,14 +89,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         onMapReady = true;
         map = googleMap;
+        map.addMarker(homeSweetHome);
         map.addMarker(busan);
         map.addMarker(seoul);
         map.addMarker(jeju);
         map.addMarker(dangridong);
         map.addMarker(haundae);
         map.addMarker(gujedo);
+        map.addCircle(new CircleOptions()
+                .center(home)
+                .radius(200)
+                .strokeColor(Color.GREEN)
+                .visible(true));
 
         flyToHome(HOME);
+
     }
 
     private void flyToHome(CameraPosition position) {
